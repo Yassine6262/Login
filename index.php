@@ -32,16 +32,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Inloggen is gelukt, stel de sessie in
         $_SESSION['ingelogd'] = true;
         $_SESSION['gebruiker'] = $user;
-        header("Location:wachtwoord.php");
+        header("Location:index.php");
         exit();
     } else {
         // Ongeldige inloggegevens, toon een foutmelding
         $foutmelding = "Ongeldige inloggegevens.";
     }
 }
+
+// Uitloggen
+if (isset($_GET['uitloggen'])) {
+    session_destroy();
+    header("Location:index.php");
+    exit();
+}
+
+// Controleer of de gebruiker is ingelogd
+if (isIngelogd()) {
+    // Haal de gebruikersgegevens op uit de sessie
+    $gebruiker = getGebruiker();
 ?>
 
 <!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>Inlogpagina</title>
+</head>
+<body>
+    <h1>Welkom, <?php echo $gebruiker['naam']; ?>!</h1>
+    <p>E-mail: <?php echo $gebruiker['email']; ?></p>
+    <p>Wachtwoord: <?php echo $gebruiker['wachtwoord']; ?></p>
+    <a href="index.php?uitloggen=1">Uitloggen</a>
+</body>
+</html>
+
+<?php
+    exit(); // Beëindig de code hier als de gebruiker is ingelogd
+}
+?>
+
+<!DOCTYPE html>
+
 <html>
 <head>
     <title>Inlogpagina</title>
